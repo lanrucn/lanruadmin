@@ -1,0 +1,309 @@
+<style type="text/css">
+    @media (max-width: 375px) {
+        .edit-form tr td input {
+            width: 100%;
+        }
+
+        .edit-form tr th:first-child, .edit-form tr td:first-child {
+            width: 20%;
+        }
+
+        .edit-form tr th:nth-last-of-type(-n+2), .edit-form tr td:nth-last-of-type(-n+2) {
+            display: none;
+        }
+    }
+
+    .edit-form table > tbody > tr td a.btn-delcfg {
+        visibility: hidden;
+    }
+
+    .edit-form table > tbody > tr:hover td a.btn-delcfg {
+        visibility: visible;
+    }
+</style>
+<div class="panel panel-default panel-intro" style="margin-top: 20px;">
+    <div class="panel-heading">
+        <div class="panel-lead"><em>系统配置</em>可以在此增改系统的变量和分组,也可以自定义分组和变量,如果需要删除请从数据库中删除</div>
+
+        <ul class="nav nav-tabs">
+            {foreach $siteList as $index=>$vo}
+            <li class="{$vo.active?'active':''}"><a href="#{$vo.name}" data-toggle="tab">{$vo.title}</a></li>
+            {/foreach}
+            <li data-toggle="tooltip" title="添加">
+                <a href="#addcfg" data-toggle="tab"><i class="fa fa-plus"></i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="panel-body">
+        <div id="myTabContent" class="tab-content">
+            {foreach $siteList as $index=>$vo}
+            <div class="tab-pane fade {$vo.active ? 'active in' : ''}" id="{$vo.name}">
+                <div class="widget-body no-padding">
+                    <form id="{$vo.name}-form" class="edit-form form-horizontal" role="form" data-toggle="validator" method="POST" action="{:url('general.config/edit')}">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th width="15%">变量标题</th>
+                                <th width="68%">变量值</th>
+                                <th width="15%">变量名</th>
+                                <th width="2%"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $vo.list as $item}
+                            <tr>
+                                <td>{$item.title}</td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-xs-12">
+                                            {switch $item.type}
+                                            {case string}
+                                            <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value|htmlentities}" class="form-control" data-rule="{$item.rule}" data-tip="{$item.tip}"/>
+                                            {/case}
+                                            {case text}
+                                            <textarea {$item.extend} name="row[{$item.name}]" class="form-control" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}">{$item.value|htmlentities}</textarea>
+                                            {/case}
+                                            {case editor}
+                                            <textarea {$item.extend} name="row[{$item.name}]" id="editor-{$item.name}" class="form-control editor" data-rule="{$item.rule}" rows="5" data-tip="{$item.tip}">{$item.value|htmlentities}</textarea>
+                                            {/case}
+                                            {case array}
+                                            <dl class="fieldlist" data-name="row[{$item.name}]">
+                                                <dd>
+                                                    <ins>键名</ins>
+                                                    <ins>键值</ins>
+                                                </dd>
+                                                <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i> 追加</a></dd>
+                                                <textarea name="row[{$item.name}]" class="form-control hide" cols="30" rows="5">{$item.value|raw}</textarea>
+                                            </dl>
+                                            {/case}
+                                            {case date}
+                                            <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control datetimepicker" data-date-format="date" placeholder="yyyy-MM-dd" data-tip="{$item.tip}" data-rule="{$item.rule}"/>
+                                            {/case}
+                                            {case time}
+                                            <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control datetimepicker" placeholder="HH:mm:ss" data-date-format="time" data-tip="{$item.tip}" data-rule="{$item.rule}"/>
+                                            {/case}
+                                            {case datetime}
+                                            <input {$item.extend} type="text" name="row[{$item.name}]" value="{$item.value}" class="form-control datetimepicker" data-date-format="datetime" placeholder="YYYY-MM-DD HH:mm:ss" data-tip="{$item.tip}" data-rule="{$item.rule}"/>
+                                            {/case}
+                                            {case number}
+                                            <input {$item.extend} type="number" name="row[{$item.name}]" value="{$item.value}" class="form-control" data-tip="{$item.tip}" data-rule="{$item.rule}"/>
+                                            {/case}
+                                            {case checkbox}
+                                            {foreach name="item.content" item="vo"}
+                                            <label for="row[{$item.name}][]-{$key}"><input id="row[{$item.name}][]-{$key}" name="row[{$item.name}][]" type="checkbox" value="{$key}" data-tip="{$item.tip}" {in name="key" value="$item.value" }checked{/in} /> {$vo}</label>
+                                            {/foreach}
+                                            {/case}
+                                            {case radio}
+                                            {foreach name="item.content" item="vo"}
+                                            <label for="row[{$item.name}]-{$key}"><input id="row[{$item.name}]-{$key}" name="row[{$item.name}]" type="radio" value="{$key}" data-tip="{$item.tip}" {in name="key" value="$item.value" }checked{/in} /> {$vo}</label>
+                                            {/foreach}
+                                            {/case}
+                                            {case value="select" break="0"}{/case}
+                                            {case value="selects"}
+                                            <select {$item.extend} name="row[{$item.name}]{$item.type=='selects'?'[]':''}" class="form-control selectpicker" data-tip="{$item.tip}" {$item.type=='selects'?'multiple':''}>
+                                                {foreach name="item.content" item="vo"}
+                                                <option value="{$key}" {in name="key" value="$item.value" }selected{/in}>{$vo}</option>
+                                                {/foreach}
+                                            </select>
+                                            {/case}
+                                            {case value="image" break="0"}{/case}
+                                            {case value="images"}
+                                            <div class="form-inline">
+                                                <input id="c-{$item.name}" class="form-control" size="50" name="row[{$item.name}]" type="text" value="{$item.value|htmlentities}" data-tip="{$item.tip}">
+                                                <span><button type="button" id="plupload-{$item.name}" class="btn btn-danger plupload" data-input-id="c-{$item.name}" data-url="{:url('ajax/upload')}" data-mimetype="image/*" data-multiple="{$item.type=='image'?'false':'true'}" data-preview-id="p-{$item.name}"><i class="fa fa-upload"></i> 上传</button></span>
+                                                <span><button type="button" id="fachoose-{$item.name}" class="btn btn-primary fachoose" data-input-id="c-{$item.name}" data-mimetype="image/*" data-url="{:url('general.attachment/select')}" data-multiple="{$item.type=='image'?'false':'true'}"><i class="fa fa-list"></i> 选择</button></span>
+                                                <span class="msg-box n-right" for="c-{$item.name}"></span>
+                                                <ul class="row list-inline plupload-preview" id="p-{$item.name}"></ul>
+                                            </div>
+                                            {/case}
+                                            {case value="file" break="0"}{/case}
+                                            {case value="files"}
+                                            <div class="form-inline">
+                                                <input id="c-{$item.name}" class="form-control" size="50" name="row[{$item.name}]" type="text" value="{$item.value|htmlentities}" data-tip="{$item.tip}">
+                                                <span><button type="button" id="plupload-{$item.name}" class="btn btn-danger plupload" data-input-id="c-{$item.name}" data-url="{:url('ajax/upload')}" data-multiple="{$item.type=='file'?'false':'true'}"><i class="fa fa-upload"></i> 上传</button></span>
+                                                <span><button type="button" id="fachoose-{$item.name}" class="btn btn-primary fachoose" data-input-id="c-{$item.name}" data-multiple="{$item.type=='file'?'false':'true'}" data-url="{:url('general.attachment/select')}"><i class="fa fa-list"></i> 选择</button></span>
+                                                <span class="msg-box n-right" for="c-{$item.name}"></span>
+                                            </div>
+                                            {/case}
+
+
+                                            {/switch}
+                                        </div>
+                                        <div class="col-sm-4"></div>
+                                    </div>
+
+                                </td>
+                                <td>{php}echo "{\$site.". $item['name'] . "}";{/php}</td>
+                                <td><a href="javascript:;" class="btn-delcfg text-muted" data-name="{$item.name}"><i class="fa fa-times"></i></a></td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="submit" class="btn btn-success btn-embossed">确定</button>
+                                    <button type="reset" class="btn btn-default btn-embossed">重置</button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                    </form>
+                </div>
+            </div>
+            {/foreach}
+            <div class="tab-pane fade" id="addcfg">
+                <form id="add-form" class="form-horizontal" data-toggle="validator" method="POST" action="{:url('add')}">
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-2">类型:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <select name="row[type]" class="form-control selectpicker">
+                                {foreach name="typeList" item="vo"}
+                                <option value="{$key}" {in name="key" value="string" }selected{/in}>{$vo}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-2">分组:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <select name="row[group]" class="form-control selectpicker">
+                                {foreach name="groupList" item="vo"}
+                                <option value="{$key}" {in name="key" value="basic" }selected{/in}>{$vo}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="control-label col-xs-12 col-sm-2">变量名:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <input type="text" class="form-control" id="name" name="row[name]" value="" data-rule="required; length(3~30); remote({:url('check')})"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="control-label col-xs-12 col-sm-2">变量标题:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <input type="text" class="form-control" id="title" name="row[title]" value="" data-rule="required"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="value" class="control-label col-xs-12 col-sm-2">变量值:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <input type="text" class="form-control" id="value" name="row[value]" value="" data-rule=""/>
+                        </div>
+                    </div>
+                    <div class="form-group hide" id="add-content-container">
+                        <label for="content" class="control-label col-xs-12 col-sm-2">数据列表:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <textarea name="row[content]" id="content" cols="30" rows="5" class="form-control" data-rule="required(content)">value1|title1
+value2|title2</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tip" class="control-label col-xs-12 col-sm-2">提示信息:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <input type="text" class="form-control" id="tip" name="row[tip]" value="" data-rule=""/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="rule" class="control-label col-xs-12 col-sm-2">校验规则:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <div class="input-group pull-left">
+                                <input type="text" class="form-control" id="rule" name="row[rule]" value="" data-tip="校验规则使用请参考Nice-validator文档"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">选择</button>
+                                    <ul class="dropdown-menu pull-right rulelist">
+                                        {volist name="ruleList" id="item"}
+                                        <li><a href="javascript:;" data-value="{$key}">{$item}<span class="text-muted">({$key})</span></a></li>
+                                        {/volist}
+                                    </ul>
+                                </span>
+                            </div>
+                            <span class="msg-box n-right" for="rule"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="extend" class="control-label col-xs-12 col-sm-2">扩展属性:</label>
+                        <div class="col-xs-12 col-sm-4">
+                            <textarea name="row[extend]" id="extend" cols="30" rows="5" class="form-control" data-tip="扩展属性支持{id}、{name}、{group}、{title}、{value}、{content}、{rule}替换"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-2"></label>
+                        <div class="col-xs-12 col-sm-4">
+                            <button type="submit" class="btn btn-success btn-embossed">确定</button>
+                            <button type="reset" class="btn btn-default btn-embossed">重置</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        //删除配置
+        $(document).on("click", ".btn-delcfg", function () {
+            var that = this;
+            layer.confirm('确定删除此项么?删除后不可恢复', {
+                icon: 3,
+                title: '提示'
+            }, function (index) {
+                common.api.ajax({
+                    url: "{:url('del')}",
+                    data: {name: $(that).data("name")}
+                }, function () {
+                    $(that).closest("tr").remove();
+                    layer.close(index);
+                });
+            });
+
+        });
+
+        //选择规则
+        $(document).on("click", ".rulelist > li > a", function () {
+            var ruleArr = $("#rule").val() == '' ? [] : $("#rule").val().split(";");
+            var rule = $(this).data("value");
+            var index = ruleArr.indexOf(rule);
+            if (index > -1) {
+                ruleArr.splice(index, 1);
+            } else {
+                ruleArr.push(rule);
+            }
+            $("#rule").val(ruleArr.join(";"));
+            $(this).parent().toggleClass("active");
+        });
+
+        //切换显示隐藏变量字典列表
+        $(document).on("change", "form#add-form select[name='row[type]']", function (e) {
+            $("#add-content-container").toggleClass("hide", ['select', 'selects', 'checkbox', 'radio'].indexOf($(this).val()) > -1 ? false : true);
+        });
+
+        common.form.bindevent($("form#add-form"), function (ret) {
+            setTimeout(function () {
+                location.reload();
+            }, 1500);
+        });
+
+
+        $('input[name="row[mail_from]"]').parent().next().append('<a class="btn btn-info testmail">发送测试邮件</a>');
+        $(document).on("click", ".testmail", function () {
+            var that = this;
+            layer.prompt({title: '请输入邮箱...', formType: 0}, function (value, index) {
+                common.api.ajax({
+                    url: "general/config/emailtest",
+                    data: $(that).closest("form").serialize() + "&receiver=" + value
+                });
+            });
+
+        });
+
+    });
+</script>

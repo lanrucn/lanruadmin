@@ -1,0 +1,92 @@
+<div class="row cm-fix-height">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h2 style="margin-top:0;">欢迎使用蓝儒后台管理系统</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row cm-fix-height">
+    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+        <a href="{:url('user/user')}" class="panel panel-default thumbnail cm-thumbnail">
+            <div class="panel-body text-center sm-st-icon">
+                <span class="svg-48 st-red"><i class="fa fa-users"></i></span>
+                <h4>{$allUser}</h4> <small>会员总数</small>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+        <a href="javascript:;" class="panel panel-default thumbnail cm-thumbnail">
+            <div class="panel-body text-center sm-st-icon">
+                <span class="svg-48 st-green"><i class="fa fa-book"></i></span>
+                <h4>{$todayUser}</h4> <small>今日注册</small>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+        <a href="javascript:;" class="panel panel-default thumbnail cm-thumbnail">
+            <div class="panel-body text-center sm-st-icon">
+                <span class="svg-48 st-violet"><i class="fa fa-shopping-cart"></i></span>
+                <h4>{$allOrder}</h4> <small>总订单数 </small>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+        <a href="javascript:;" class="panel panel-default thumbnail cm-thumbnail">
+            <div class="panel-body text-center sm-st-icon">
+                <span class="svg-48 st-blue"><i class="fa fa-cny"></i></span>
+                <h4>{$allMoney}</h4> <small>总金额</small>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<div class="row cm-fix-height">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">服务器信息</div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tbody>
+                    <tr>
+                        <td width="140">LanruAdmin版本</td>
+                        <td>v3.0.0</td>
+                    </tr>
+                    <tr>
+                        <td>Thinkphp version</td>
+                        <td>{$version}</td>
+                    </tr>
+                    <tr>
+                        <td>运行方式</td>
+                        <td>{:php_sapi_name()}</td>
+                    </tr>
+                    <tr>
+                        <td>调试模式</td>
+                        <td>{$Think.config.app_debug?'是':'否'}</td>
+                    </tr>
+                    <tr>
+                        <td>环境信息</td>
+                        <td>{$Think.server.SERVER_SOFTWARE}</td>
+                    </tr>
+
+                    <tr>
+                        <td>时区</td>
+                        <td>{:date_default_timezone_get()}</td>
+                    </tr>
+                    <tr>
+                        <td>语言</td>
+                        <td>zh-cn</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

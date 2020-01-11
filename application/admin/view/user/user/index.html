@@ -1,0 +1,111 @@
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-body">
+
+        <div class="search-table clearfix{:empty($search)? ' hide' : ''}">
+            <form class="form-horizontal" method="post" action="" role="search">
+                <fieldset>
+                    <div class="row">
+
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">用户名</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="search[name]" value="{:isset($search.name)?$search.name:''}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">手机号</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="search[mobile]" value="{:isset($search.mobile)?$search.mobile:''}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">Email</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="search[email]" value="{:isset($search.email)?$search.email:''}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-sm-8 col-xs-offset-4">
+                                <button type="submit" class="btn btn-success">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,add,del')}
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-sm btn-default btn-search" type="button"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="allIds"></th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">组别</th>
+                    <th class="text-center">用户名</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">手机号</th>
+                    <th class="text-center">头像</th>
+                    <th class="text-center">积分</th>
+                    <th class="text-center">余额</th>
+                    <th class="text-center">上次登录时间</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if $list->total() == 0}
+                <tr>
+                    <td colspan="12" class="text-center color-ccc">暂无相关数据</td>
+                </tr>
+                {else}
+                {foreach $list as $item}
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                    <th class="text-center">{$item.id}</th>
+                    <td class="text-center">{$item.group_txt}</td>
+                    <td class="text-center">{$item.name}</td>
+                    <td class="text-center">{$item.email}</td>
+                    <td class="text-center">{$item.mobile}</td>
+                    <td class="text-center">{if !empty($item.avatar)}<img src="{$item.avatar}" width="20" height="20" />{else}-{/if}</td>
+                    <td class="text-center">{$item.score}</td>
+                    <td class="text-center">{$item.balance}</td>
+                    <td class="text-center">{$item.login_time}</td>
+                    <td class="text-center">{:bulid_status($item['status'])}</td>
+                    <td class="text-center">
+                        {if $auth->check('user/user/edit')}
+                        <a href="javascript:;" data-href="{:url('edit', ['id' => $item.id])}" class="btn btn-xs btn-success btn-dialog" data-toggle="tooltip" data-original-title="编辑"><i class="fa fa-pencil"></i></a>
+                        {/if}
+
+                        {if $auth->check('user/user/del')}
+                        <a href="javascript:;" data-href="{:url('del', ['id' => $item.id])}" class="btn btn-xs btn-danger btn-del" data-toggle="tooltip" data-original-title="删除"><i class="fa fa-trash"></i></a>
+                        {/if}
+
+                    </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+
+            <div class="table-pagination clearfix">
+                <div class="pull-right pagination">
+                    {$list|raw}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

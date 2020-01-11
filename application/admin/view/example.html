@@ -1,0 +1,82 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-heading">
+        <div class="panel-lead">
+            <em>菜单规则</em>
+            规则通常对应一个控制器的方法,同时左侧的菜单栏数据也从规则中体现,通常建议通过命令行进行生成规则节点
+        </div>
+    </div>
+    <div class="panel-body">
+
+        <div class="commonsearch-table clearfix"><form class="form-horizontal form-commonsearch nice-validator n-default n-bootstrap" novalidate="" method="post" action=""><fieldset><div class="row"><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="id" class="control-label col-xs-4">Id</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="id-operate" data-name="id" value="=" readonly=""><input type="text" class="form-control" name="id" value="" placeholder="Id" id="id" data-index="1"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="name" class="control-label col-xs-4">名称</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="name-operate" data-name="name" value="=" readonly=""><input type="text" class="form-control" name="name" value="" placeholder="名称" id="name" data-index="2"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="title" class="control-label col-xs-4">标题</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="title-operate" data-name="title" value="=" readonly=""><input type="text" class="form-control" name="title" value="" placeholder="标题" id="title" data-index="3"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="table" class="control-label col-xs-4">表名</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="table-operate" data-name="table" value="=" readonly=""><input type="text" class="form-control" name="table" value="" placeholder="表名" id="table" data-index="4"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="createtime" class="control-label col-xs-4">添加时间</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="createtime-operate" data-name="createtime" value="RANGE" readonly=""><input type="text" class="form-control datetimerange" name="createtime" value="" placeholder="添加时间" id="createtime" data-index="5"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="updatetime" class="control-label col-xs-4">更新时间</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="updatetime-operate" data-name="updatetime" value="RANGE" readonly=""><input type="text" class="form-control datetimerange" name="updatetime" value="" placeholder="更新时间" id="updatetime" data-index="6"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="datalist" class="control-label col-xs-4">操作</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="datalist-operate" data-name="datalist" value="=" readonly=""><input type="text" class="form-control" name="datalist" value="" placeholder="操作" id="datalist" data-index="8"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><label for="status" class="control-label col-xs-4">状态</label><div class="col-xs-8"><input type="hidden" class="form-control operate" name="status-operate" data-name="status" value="=" readonly=""><input type="text" class="form-control" name="status" value="" placeholder="状态" id="status" data-index="9"></div></div><div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3"><div class="col-sm-8 col-xs-offset-4"><button type="submit" class="btn btn-success" formnovalidate="">提交</button> <button type="reset" class="btn btn-default">重置</button> </div></div></div></fieldset></form></div>
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                <a href="javascript:;" class="btn btn-sm btn-primary btn-refresh" title="刷新"><i class="fa fa-refresh"></i> </a>
+                <a href="javascript:;" class="btn btn-sm btn-success btn-add " title="添加"><i class="fa fa-plus"></i> 添加</a>
+                <a href="javascript:;" class="btn btn-sm btn-success btn-edit btn-disabled" title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
+                <a href="javascript:;" class="btn btn-sm btn-danger btn-del btn-disabled" title="删除"><i class="fa fa-trash"></i> 删除</a>
+                <div class="dropdown btn-group">
+                    <a class="btn btn-sm btn-primary btn-more dropdown-toggle btn-disabled" data-toggle="dropdown"><i class="fa fa-cog"></i> 更多</a>
+                    <ul class="dropdown-menu text-left" role="menu">
+                        <li><a class="btn btn-sm btn-link btn-multi btn-disabled" href="javascript:;" data-params="status=normal"><i class="fa fa-eye"></i> 设为正常</a></li>
+                        <li><a class="btn btn-sm btn-link btn-multi btn-disabled" href="javascript:;" data-params="status=hidden"><i class="fa fa-eye-slash"></i> 设为隐藏</a></li>
+                    </ul>
+                </div>
+                <a href="javascript:;" class="btn btn-danger btn-toggle-all"><i class="fa fa-plus"></i> 显示全部</a>
+            </div>
+
+            <div class="pull-right">
+                <div class="dropdown btn-group">
+                    <button class="btn btn-sm btn-default dropdown-toggle" title="导出数据" data-toggle="dropdown" type="button"><i class="glyphicon glyphicon-export icon-share"></i> <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li role="menuitem" data-type="json"><a href="javascript:void(0)">JSON</a></li>
+                        <li role="menuitem" data-type="xml"><a href="javascript:void(0)">XML</a></li>
+                        <li role="menuitem" data-type="csv"><a href="javascript:void(0)">CSV</a></li>
+                        <li role="menuitem" data-type="txt"><a href="javascript:void(0)">TXT</a></li>
+                        <li role="menuitem" data-type="doc"><a href="javascript:void(0)">MS-Word</a></li>
+                        <li role="menuitem" data-type="excel"><a href="javascript:void(0)">MS-Excel</a></li>
+                    </ul>
+                </div>
+                <button class="btn btn-sm btn-default" type="button" title="普通搜索"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </div>
+
+
+
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="table-pagination clearfix">
+            <div class="pull-right pagination"><ul class="pagination"><li class="page-pre"><a href="#">上一页</a></li><li class="page-number active"><a href="#">1</a></li><li class="page-number"><a href="#">2</a></li><li class="page-number"><a href="#">3</a></li><li class="page-number"><a href="#">4</a></li><li class="page-number"><a href="#">5</a></li><li class="page-last-separator disabled"><a href="#">...</a></li><li class="page-last"><a href="#">10</a></li><li class="page-next"><a href="#">下一页</a></li></ul></div>
+        </div>
+
+    </div>
+</div>

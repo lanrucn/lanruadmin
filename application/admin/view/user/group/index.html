@@ -1,0 +1,65 @@
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-body">
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,add,del')}
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <col width="80" />
+                <col width="80" />
+                <col />
+                <col width="50" />
+                <col width="160" />
+                <col width="160" />
+                <col width="120" />
+                <col width="80" />
+                <thead>
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="allIds"></th>
+                    <th class="text-center">ID</th>
+                    <th>组名</th>
+                    <th class="text-center">图标</th>
+                    <th class="text-center">添加时间</th>
+                    <th class="text-center">更新时间</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if count($list) == 0}
+                <tr>
+                    <td colspan="8" class="text-center color-ccc">暂无相关数据</td>
+                </tr>
+                {else}
+                {foreach $list as $item}
+                <tr>
+                <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                <th class="text-center">{$item.id}</th>
+                <td>{$item.name}</td>
+                <td class="text-center">{notempty name="item.icon"}<img src="{$item.icon}" width="20" height="20">{/notempty}</td>
+                <td class="text-center">{$item.addtime}</td>
+                <td class="text-center">{$item.edittime}</td>
+                <td class="text-center">{:bulid_status($item['status'])}</td>
+                <td class="text-center">
+                    {if $auth->check('user/group/edit')}
+                    <a href="javascript:;" data-href="{:url('edit', ['id' => $item.id])}" class="btn btn-xs btn-success btn-dialog" data-toggle="tooltip" data-original-title="编辑"><i class="fa fa-pencil"></i></a>
+                    {/if}
+                    {neq name="item.id" value="1"}
+                    {if $auth->check('user/group/del')}
+                    <a href="javascript:;" data-href="{:url('del', ['id' => $item.id])}" class="btn btn-xs btn-danger btn-del" data-toggle="tooltip" data-original-title="删除"><i class="fa fa-trash"></i></a>
+                    {/if}
+                    {/neq}
+                </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

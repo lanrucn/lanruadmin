@@ -1,0 +1,57 @@
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-body">
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,add,del')}
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <col width="80" />
+                <col width="80" />
+                <col />
+                <col width="120" />
+                <col width="120" />
+                <thead>
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="allIds"></th>
+                    <th class="text-center">ID</th>
+                    <th>组名</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if count($data) == 0}
+                <tr>
+                    <td colspan="9" class="text-center color-ccc">暂无相关数据</td>
+                </tr>
+                {else}
+                {foreach $data as $item}
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                    <th class="text-center">{$item.id}</th>
+                    <td>{$item.name|raw}</td>
+                    <td class="text-center">{:bulid_status($item['status'])}</td>
+                    <td class="text-center">
+                        {neq name="item.id" value="1"}
+                        {if $auth->check('auth/group/edit')}
+                        <a href="javascript:;" data-href="{:url('edit', ['id' => $item.id])}" class="btn btn-xs btn-success btn-dialog" data-toggle="tooltip" data-original-title="编辑"><i class="fa fa-pencil"></i></a>
+                        {/if}
+
+                        {if $auth->check('auth/group/del')}
+                        <a href="javascript:;" data-href="{:url('del', ['id' => $item.id])}" class="btn btn-xs btn-danger btn-del" data-toggle="tooltip" data-original-title="删除"><i class="fa fa-trash"></i></a>
+                        {/if}
+                        {/neq}
+                    </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

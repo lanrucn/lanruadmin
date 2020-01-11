@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="/assets/backend/css/lanru.css">
+    <title>{:__('title')}</title>
+    <script src="/assets/libs/jquery/jquery-2.1.3.min.js"></script>
+</head>
+<body class="cm-no-transition cm-1-navbar">
+{if !$isDialog}
+<div id="cm-menu">
+    <nav class="cm-navbar cm-navbar-primary">
+        <div class="cm-flex"><div class="cm-logo logo"></div></div>
+        <div class="btn btn-primary md-menu-white" data-toggle="cm-menu"></div>
+    </nav>
+    <div id="cm-menu-content">
+        <div id="cm-menu-items-wrapper">
+            <div id="cm-menu-scroller">
+                <ul class="cm-menu-items">
+                    {$menulist|raw}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<header id="cm-header">
+    <nav class="cm-navbar cm-navbar-primary">
+        <div class="btn btn-primary md-menu-white hidden-md hidden-lg" data-toggle="cm-menu"></div>
+        <div class="cm-flex">
+            <div class="cm-breadcrumb-container">
+                <ol class="breadcrumb">
+                    <li><a href="/{$modulename}">首页</a></li>
+                    {foreach $breadcrumb as $vo}
+                    <li><a href="{$vo.url}">{$vo.title}</a></li>
+                    {/foreach}
+                </ol>
+            </div>
+        </div>
+
+        <div class="pull-right">
+            <a class="btn btn-primary md-home-white" target="_blank" href="{:url('/')}"></a>
+        </div>
+
+        <div class="pull-right">
+            <a class="btn btn-primary md-delete-white" data-href="{:url('ajax/cache')}" href="javascript:;"></a>
+        </div>
+
+        <div class="dropdown pull-right">
+            <button class="btn btn-primary md-account-circle-white" data-toggle="dropdown"></button>
+            <ul class="dropdown-menu">
+                <li class="disabled text-center">
+                    <a style="cursor:default;"><strong>{$admin.name|htmlentities}</strong></a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="{:url('admin.profile/index')}"><i class="fa fa-fw fa-cog"></i> 个人设置</a>
+                </li>
+                <li>
+                    <a href="{:url('index/logout')}"><i class="fa fa-fw fa-sign-out"></i> 退出</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+{/if}
+<div class="global{:$isDialog ? ' is-dialog' : ''}">
+    <div class="container-fluid">
+        {__CONTENT__}
+    </div>
+    {if !$isDialog}
+    <footer class="cm-footer"><span class="pull-right">&copy; LanRu NetWork Inc.</span></footer>{/if}
+</div>
+
+<script src="/assets/libs/jquery.mousewheel/jquery.mousewheel.min.js"></script>
+<script src="/assets/libs/jquery.cookie/jquery.cookie.min.js"></script>
+<script src="/assets/libs/fastclick/fastclick.min.js"></script>
+<script src="/assets/libs/bootstrap/bootstrap.min.js"></script>
+<script src="/assets/libs/clearmin/clearmin.min.js"></script>
+<script src="/assets/libs/layer/layer.js"></script>
+<script src="/assets/libs/jstree/dist/jstree.min.js"></script>
+<script src="/assets/libs/toastr/toastr.min.js"></script>
+<script src="/assets/libs/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="/assets/libs/bootstrap-select/dist/js/i18n/defaults-zh_CN.min.js"></script>
+<script src="/assets/libs/selectpage/src/language.js"></script>
+<script src="/assets/libs/selectpage/src/selectpage.js"></script>
+<script src="/assets/libs/nice-validator/dist/jquery.validator.min.js"></script>
+<script src="/assets/libs/nice-validator/dist/local/zh-CN.js"></script>
+<script src="/assets/libs/art-template/dist/template.js"></script>
+<script src="/assets/libs/plupload/js/moxie.min.js"></script>
+<script src="/assets/libs/plupload/js/plupload.min.js"></script>
+<script src="/assets/libs/jquery.dragsort.js"></script>
+<script src="/assets/libs/laydate/laydate.js"></script>
+<script src="/assets/backend/js/common.js"></script>
+</body>
+</html>

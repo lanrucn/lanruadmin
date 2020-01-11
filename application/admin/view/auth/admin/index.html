@@ -1,0 +1,55 @@
+<div class="panel panel-default panel-intro">
+    <div class="panel-body">
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,add,del')}
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="text-center"><input type="checkbox" name="allIds"></th>
+                <th class="text-center">ID</th>
+                <th>管理组</th>
+                <th class="text-center">登录名</th>
+                <th>最后登录时间</th>
+                <th class="text-center">最后登录IP</th>
+                <th class="text-center">状态</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $total == 0}
+            <tr>
+                <td colspan="9" class="text-center color-ccc">暂无相关数据</td>
+            </tr>
+            {else}
+            {foreach $data as $item}
+            <tr>
+                <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                <th class="text-center">{$item.id}</th>
+                <td>{$item.groups_text}</td>
+                <td class="text-center">{$item.name}</td>
+                <td>{:isset($item.login_time) && $item.login_time > 0 ? date('Y-m-d H:i:s', $item.login_time) : '-'}</td>
+                <td class="text-center">{$item.login_ip}</td>
+                <td class="text-center">{:bulid_status($item['status'])}</td>
+                <td class="text-center">
+                    {if $auth->check('auth/admin/edit')}
+                    <a href="javascript:;" data-href="{:url('edit', ['id' => $item.id])}" class="btn btn-xs btn-success btn-dialog" data-toggle="tooltip" data-original-title="编辑"><i class="fa fa-pencil"></i></a>
+                    {/if}
+
+                    {if $auth->check('auth/admin/del')}
+                    <a href="javascript:;" data-href="{:url('del', ['id' => $item.id])}" class="btn btn-xs btn-danger btn-del" data-toggle="tooltip" data-original-title="删除"><i class="fa fa-trash"></i></a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {/if}
+            </tbody>
+        </table>
+        </div>
+
+    </div>
+</div>

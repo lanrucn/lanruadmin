@@ -1,0 +1,113 @@
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-body">
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,add,del')}
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <col width="80" />
+                <col width="80" />
+                <col width="200" />
+                <col width="60" />
+                <col />
+                <col width="80" />
+                <col width="80" />
+                <col width="120" />
+                <col width="80" />
+                <col width="120" />
+                <thead>
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="allIds"></th>
+                    <th class="text-center">ID</th>
+                    <th>规则名称</th>
+                    <th class="text-center">图标</th>
+                    <th>规则</th>
+                    <th class="text-center">权重</th>
+                    <th class="text-center">菜单</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">
+                        <a href="javascript:;" class="btn btn-success btn-xs btn-toggle"><i class="fa fa-chevron-up"></i></a>
+                    </th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if count($list) == 0}
+                <tr>
+                    <td colspan="10" class="text-center color-ccc">暂无相关数据</td>
+                </tr>
+                {else}
+                {foreach $list as $item}
+                <tr{neq name="item.ismenu" value="1"} style="display: none;"{/neq}>
+                    <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                    <th class="text-center">{$item.id}</th>
+                    <td>{$item.title|raw}</td>
+                    <td class="text-center"><i class="{$item.icon}"></i></td>
+                    <td>{$item.rule}</td>
+                    <td class="text-center">{$item.weight}</td>
+                    <td class="text-center">{:bulid_status($item['ismenu'], 1)}</td>
+                    <td class="text-center">{:bulid_status($item['status'])}</td>
+                    <td class="text-center">
+                        {if $item.ismenu == 1}
+                        <a href="javascript:;" data-toggle="tooltip" data-id="{$item.id}" data-pid="{$item.pid}" class="btn btn-xs btn-success btn-node-sub" data-original-title="点击切换子菜单"><i class="fa fa-sitemap"></i></a>
+                        {else}
+                        <a href="javascript:;" data-toggle="tooltip" title="点击切换子菜单" data-id="{$item.id}" data-pid="{$item.pid}" class="btn btn-xs btn-default disabled btn-node-sub"><i class="fa fa-sitemap"></i></a>
+                        {/if}
+
+                    </td>
+                    <td class="text-center">
+                        {if $auth->check('auth/rule/edit')}
+                        <a href="javascript:;" data-href="{:url('edit', ['id' => $item.id])}" class="btn btn-xs btn-success btn-dialog" data-toggle="tooltip" data-original-title="编辑"><i class="fa fa-pencil"></i></a>
+                        {/if}
+
+                        {if $auth->check('auth/rule/del')}
+                        <a href="javascript:;" data-href="{:url('del', ['id' => $item.id])}" class="btn btn-xs btn-danger btn-del" data-toggle="tooltip" data-original-title="删除"><i class="fa fa-trash"></i></a>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        //展开隐藏一级
+        $(document.body).on("click", ".btn-toggle", function (e) {
+            $("a.btn[data-id][data-pid][data-pid!=0].disabled").closest("tr").hide();
+            var that = this;
+            var show = $("i", that).hasClass("fa-chevron-down");
+            $("i", that).toggleClass("fa-chevron-down", !show);
+            $("i", that).toggleClass("fa-chevron-up", show);
+            $("a.btn[data-id][data-pid][data-pid!=0]").not('.disabled').closest("tr").toggle(show);
+            $(".btn-node-sub[data-pid=0]").data("shown", show);
+        });
+
+        //显示隐藏子节点
+        $(".btn-node-sub").off("click").on("click", function (e) {
+            var status = $(this).data("shown") ? true : false;
+            $("a.btn[data-pid='" + $(this).data("id") + "']").each(function () {
+                $(this).closest("tr").toggle(!status);
+            });
+            $(this).data("shown", !status);
+            return false;
+        });
+
+        //展开隐藏全部
+        $(document.body).on("click", ".btn-toggle-all", function (e) {
+            var that = this;
+            var show = $("i", that).hasClass("fa-plus");
+            $("i", that).toggleClass("fa-plus", !show);
+            $("i", that).toggleClass("fa-minus", show);
+            $(".btn-node-sub.disabled").closest("tr").toggle(show);
+            $(".btn-node-sub").data("shown", show);
+        });
+    });
+</script>

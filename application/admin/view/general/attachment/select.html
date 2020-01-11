@@ -1,0 +1,100 @@
+<div class="panel panel-default panel-intro">
+    <style>.attachment{max-width: 120px; max-height: 90px; }</style>
+
+    <div class="panel-body">
+
+        <div class="search-table clearfix{:empty($search)? ' hide' : ''}">
+            <form class="form-horizontal" method="post" action="" role="search">
+                <fieldset>
+                    <div class="row">
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">文件名称</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="search[url]" value="{$search.url}"  >
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">Mime类型</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" name="search[type]" value="{$search.type}" />
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <label class="control-label col-xs-4">添加时间</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control datetimerange" name="search[addtime]" value="{$search.addtime}" placeholder="添加时间">
+                            </div>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-sm-8 col-xs-offset-4">
+                                <button type="submit" class="btn btn-success">提交</button>
+                                <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh,create')}
+                {if request()->get('multiple') == 'true'}
+                <a class="btn btn-danger btn-sm btn-choose-multi"><i class="fa fa-check"></i> 选择</a>
+                {/if}
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-sm btn-default btn-search" type="button"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <col width="80" />
+                <col width="80" />
+                <col width="120" />
+                <col />
+                <col width="80" />
+                <col width="60" />
+                <thead>
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="allIds"></th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">预览</th>
+                    <th class="text-center">Mime类型</th>
+                    <th class="text-center">文件大小</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if $list->total() == 0}
+                <tr>
+                    <td colspan="6" class="text-center color-ccc">暂无相关数据</td>
+                </tr>
+                {else}
+                {foreach $list as $item}
+                <tr>
+                    <th class="text-center"><input type="checkbox" name="ids[]" data-url="{$item.url}" value="{$item.id}"></th>
+                <th class="text-center">{$item.id}</th>
+                <td class="text-center"><a href="{$item.url}" target="_blank"><img src="{$item.url}" class="attachment" /></a></td>
+                <td class="text-center">{$item.type}</td>
+                <td class="text-center">{$item.filesize}</td>
+                <td class="text-center">
+                    {if $auth->check('general/attachment/select')}
+                    <a href="javascript:;" class="btn btn-danger btn-chooseone btn-xs" data-id="{$item.id}" data-url="{$item.url}"><i class="fa fa-check"></i> 选择</a>
+
+                    {/if}
+                </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+            <div class="table-pagination clearfix">
+                <div class="pull-right pagination">
+                    {$list|raw}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

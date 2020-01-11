@@ -1,0 +1,77 @@
+<div class="row cm-fix-height">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">个人配置</div>
+            <div class="panel-body">
+                <form action="{:url('update')}" method="post" class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-2">登录名</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input readonly class="form-control" value="{$admin.name|htmlentities}" type="text" name="row[name]" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-2">密码</label>
+                        <div class="col-xs-12 col-sm-8">
+                            <input class="form-control" placeholder="不修改请留空" type="text" name="row[password]" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-6 text-left">
+                            <button type="submit" class="btn btn-success">提交</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-8">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">操作日志</div>
+            <div class="panel-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center"><input type="checkbox" name="allIds"></th>
+                        <th class="text-center">ID</th>
+                        <th>标题</th>
+                        <th class="text-center">链接</th>
+                        <th>ip</th>
+                        <th class="text-center">操作时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if $list->total() == 0}
+                    <tr>
+                        <td colspan="6" class="text-center color-ccc">暂无相关数据</td>
+                    </tr>
+                    {else}
+                    {foreach $list as $item}
+                    <tr>
+                        <th class="text-center"><input type="checkbox" name="ids[]" value="{$item.id}"></th>
+                        <th class="text-center">{$item.id}</th>
+                        <td>{$item.title}</td>
+                        <td class="text-center">{$item.url}</td>
+                        <td>{$item.ip}</td>
+                        <td class="text-center">{$item.addtime}</td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+                <div class="table-pagination clearfix">
+                    <div class="pull-right pagination">
+                        {$list|raw}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

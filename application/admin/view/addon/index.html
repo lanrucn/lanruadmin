@@ -1,0 +1,186 @@
+<div class="panel panel-default panel-intro">
+
+    <div class="panel-body">
+
+        <div class="table-toolbar clearfix">
+            <div class="pull-left">
+                {:bulid_menu('refresh')}
+                <button type="button" id="plupload-addon" class="btn btn-danger btn-sm plupload" data-url="addon/local"
+                        data-mimetype="application/zip" data-multiple="false"><i class="fa fa-upload"></i>
+                    上传安装
+                </button>
+            </div>
+        </div>
+        <div class="table-frame">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center">前台</th>
+                    <th class="text-center">插件名称</th>
+                    <th class="text-center">介绍</th>
+                    <th class="text-center">作者</th>
+                    <th class="text-center">版本</th>
+                    <th class="text-center">状态</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if count($addons) == 0}
+                <tr>
+                    <td colspan="7" class="text-center color-ccc">暂无插件</td>
+                </tr>
+                {else}
+                {foreach $addons as $item}
+                <tr>
+                    <th class="text-center">
+                        {if isset($item.url)}
+                        <a href="{$item.url}" data-toggle="tooltip" title="" target="_blank" data-original-title="查看插件前台首页"><i class="fa fa-home text-primary"></i></a>
+                        {else}
+                        <a href="javascript:;"><i class="fa fa-home text-gray"></i></a>
+                        {/if}
+                    </th>
+                    <td class="text-center">{$item.title}</td>
+                    <td class="text-center">{$item.intro}</td>
+                    <td class="text-center">{$item.author}</td>
+                    <td class="text-center">{$item.version}</td>
+                    <td class="text-center">
+                        {if $item.state ==1}
+                        <a href="javascript:;" data-toggle="tooltip" class="btn-disable" data-action="disable" data-name="{$item.name}" data-original-title="点击切换插件状态"><i class="fa fa-toggle-on text-success fa-2x"></i> </a>
+                        {else}
+                        <a href="javascript:;" data-toggle="tooltip" class="btn-enable" data-action="enable" data-name="{$item.name}" data-original-title="点击切换插件状态"><i class="fa fa-toggle-on fa-rotate-180 text-gray fa-2x"></i></a>{/if}
+
+
+                    </td>
+                    <td class="text-center">
+                        {neq name="item.config" value="0"}
+                        <a href="javascript:;" data-name="{$item.name}" class="btn btn-xs btn-primary btn-config" title="配置"><i class="fa fa-pencil"></i>配置</a>
+                        {/neq}
+                        <a href="javascript:;" data-name="{$item.name}" data-state="{$item.state}" class="btn btn-xs btn-danger btn-uninstall" title="卸载"><i class="fa fa-times"></i>卸载</a>
+                    </td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script id="conflicttpl" type="text/html">
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>温馨提示</strong> 此插件中发现和现有系统中部分文件发现冲突！以下文件将会被影响，请备份好相关文件后再继续操作
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>文件</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{each conflictlist as value index}}
+        <tr>
+            <th scope="row">{{ index+1 }}</th>
+            <td>{{ value }}</td>
+        </tr>
+        {{ /each }}
+        </tbody>
+    </table>
+</script>
+<script>
+    $(function () {
+        common.plupload.api.plupload("#plupload-addon", function (data, ret) {
+            layer.msg(ret.msg, function () {
+                location.reload();
+            });
+        });
+
+        // 点击配置
+        $(document).on("click", ".btn-config", function () {
+            var name = $(this).data("name");
+            common.api.open("addon/config?name=" + name, '配置');
+        });
+
+        // 点击卸载
+        $(document).on("click", ".btn-uninstall", function () {
+            var name = $(this).data('name');
+            var state = $(this).data('state');
+            if (state == 1) {
+                layer.alert('必须先禁用插件!', {icon: 7});
+                return false;
+            }
+            layer.confirm('卸载插件:' + name, function () {
+                uninstall(name, false);
+            });
+        });
+        var uninstall = function (name, force) {
+            common.api.ajax({
+                url: 'addon/uninstall',
+                data: {name: name, force: force ? 1 : 0}
+            }, function (data, ret) {
+                layer.closeAll();
+                $('.btn-refresh').trigger('click');
+            }, function (data, ret) {
+                if (ret && ret.code === -3) {
+                    //插件目录发现影响全局的文件
+                    layer.open({
+                        content: Template("conflicttpl", ret.data),
+                        shade: 0.8,
+                        area: ['800px', '600px'],
+                        title: '提醒',
+                        btn: ['继续卸载', '取消'],
+                        end: function () {
+
+                        },
+                        yes: function () {
+                            uninstall(name, true);
+                        }
+                    });
+
+                } else {
+                    layer.alert(ret.msg);
+                }
+                return false;
+            });
+        };
+
+        // 点击启用/禁用
+        $(document).on("click", ".btn-enable,.btn-disable", function () {
+            var name = $(this).data("name");
+            var action = $(this).data("action");
+            operate(name, action, false);
+        });
+
+        var operate = function (name, action, force) {
+            common.api.ajax({
+                url: 'addon/state',
+                data: {name: name, action: action, force: force ? 1 : 0}
+            }, function (data, ret) {
+                layer.closeAll();
+                $('.btn-refresh').trigger('click');
+            }, function (data, ret) {
+                if (ret && ret.code === -3) {
+                    //插件目录发现影响全局的文件
+                    layer.open({
+                        content: Template("conflicttpl", ret.data),
+                        shade: 0.8,
+                        area: ['800px', '600px'],
+                        title: '提醒',
+                        btn: ['继续操作', '取消'],
+                        end: function () {
+
+                        },
+                        yes: function () {
+                            operate(name, action, true);
+                        }
+                    });
+
+                } else {
+                    layer.alert(ret.msg);
+                }
+                return false;
+            });
+        };
+    });
+</script>
